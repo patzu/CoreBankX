@@ -216,6 +216,51 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
+### Global Exception Handling
+
+- **Explanation**: Global exception handling is a mechanism to handle unexpected errors or exceptions that occur during the execution of your application. Instead of letting exceptions propagate up the call stack and potentially crashing the application, global exception handling intercepts these exceptions and provides a centralized way to handle them.
+
+- **Implementation**:
+  - **ExceptionHandler**: Create a centralized `@ControllerAdvice` class to handle exceptions globally.
+  - **ExceptionHandler Methods**: Define methods within the `@ControllerAdvice` class to handle specific types of exceptions or generic exceptions.
+  - **ResponseEntityExceptionHandler**: Optionally extend `ResponseEntityExceptionHandler` to customize error responses based on different exception scenarios.
+  - **Logging**: Log the exceptions for troubleshooting and monitoring purposes.
+
+- **Benefits**:
+  - **Consistent Error Responses**: Ensure consistency in error responses across your application.
+  - **Improved User Experience**: Provide meaningful error messages to users, enhancing their experience.
+  - **Centralized Error Handling**: Centralize error handling logic, making it easier to manage and maintain.
+  - **Prevent Information Leakage**: Handle exceptions gracefully to prevent sensitive information from being exposed to users.
+
+- **Example**:
+  ```java
+  @ControllerAdvice
+  public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+      @ExceptionHandler(Exception.class)
+      public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
+          // Log the exception
+          logger.error("An unexpected error occurred: {}", ex.getMessage(), ex);
+
+          // Create a custom error response
+          ErrorResponse errorResponse = new ErrorResponse("An unexpected error occurred. Please try again later.");
+
+          return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      // Add more exception handler methods as needed
+  }
+  ```
+
+### Integration into CoreBankX
+
+- **Integration**: Integrate global exception handling into the core banking application to ensure robust error handling throughout the system.
+- **Testing**: Write unit tests and integration tests to validate the behavior of global exception handling in different scenarios.
+- **Documentation**: Document the exception handling strategy and provide guidance on how to extend or customize it as needed.
+
+By adding global exception handling to your project's outline, you ensure that your core banking application can gracefully handle errors and exceptions, providing a more reliable and user-friendly experience for its users.
+
+
 ## Dependencies
 
 IntelliJ IDEA makes it easy to bootstrap a Spring Boot project using its Spring Initializr integration. When creating a new Spring Boot project in IntelliJ IDEA, you'll be prompted to specify dependencies through the Spring Initializr interface. Here's a breakdown of some common dependencies you might want to consider adding and why:
